@@ -2010,6 +2010,10 @@ void write_ftpd_conf()
 #else
 	fprintf(fp, "listen=YES\n");
 #endif
+	if(! nvram_get_int("ftp_wanac")){
+		fprintf(fp, "listen_address=%s\n", nvram_safe_get("lan_ipaddr"));
+	}
+
 	fprintf(fp, "pasv_enable=YES\n");
 	fprintf(fp, "ssl_enable=NO\n");
 	fprintf(fp, "tcp_wrappers=NO\n");
