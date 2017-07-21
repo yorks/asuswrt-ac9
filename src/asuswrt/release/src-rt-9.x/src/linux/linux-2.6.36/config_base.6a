@@ -1321,7 +1321,7 @@ CONFIG_USB_WDM=m
 #
 # USB modem driver of Beceem
 #
-CONFIG_USB_BECEEM=m
+CONFIG_USB_BECEEM=n
 
 #
 # NOTE: USB_STORAGE depends on SCSI but BLK_DEV_SD may
