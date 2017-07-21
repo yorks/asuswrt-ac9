@@ -771,7 +771,7 @@ obj-$(RTCONFIG_QUICKSEC) += quicksec-6.0-fips
 obj-$(RTCONFIG_STRONGSWAN) += strongswan-5.2.1
 
 ifneq ($(RTCONFIG_4M_SFP),y)
-obj-y += netstat-nat
+#obj-y += netstat-nat
 endif
 
 obj-$(RTCONFIG_TCPDUMP) += libpcap
