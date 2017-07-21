@@ -416,7 +416,7 @@ obj-y += etc
 obj-y += ntpclient
 
 ifneq ($(RTCONFIG_4M_SFP),y)
-obj-y += rstats
+#obj-y += rstats
 endif
 ifeq ($(RTCONFIG_DSL),y)
 obj-y += spectrum
@@ -464,7 +464,7 @@ obj-$(RTCONFIG_TFTP) += tftp
 # !!TB
 ifeq ($(RTCONFIG_USB),y)
 #obj-y += p910nd
-obj-y += scsi-idle
+#obj-y += scsi-idle
 obj-y += libusb10
 obj-y += libusb
 obj-y += libusb-0.1.12
@@ -657,7 +657,8 @@ obj-$(RTCONFIG_PPTP) += accel-pptp
 obj-$(RTCONFIG_EAPOL) += wpa_supplicant
 obj-$(RTCONFIG_HTTPS) += openssl
 obj-$(RTCONFIG_HTTPS) += wget zlib
-obj-$(RTCONFIG_SSH) += dropbear
+# make RTC.._SSH open, but not install it for install it later
+#obj-$(RTCONFIG_SSH) += dropbear
 obj-$(RTCONFIG_WTFAST) += wtfast
 #obj-$(RTCONFIG_ZEBRA) += zebra
 obj-$(RTCONFIG_QUAGGA) += quagga
@@ -683,19 +684,19 @@ obj-$(RTCONFIG_IXIAEP) += ixia_endpoint$(BCMEX)
 # Add for ASUS Components
 obj-$(RTCONFIG_UPNPC) += miniupnpc
 obj-y += miniupnpd$(MUVER)
-obj-y += igmpproxy
-obj-y += snooper
+#obj-y += igmpproxy
+#obj-y += snooper
 ifeq ($(RTCONFIG_BCMWL6),y)
 ifneq ($(RTCONFIG_BCMARM),y)
 obj-y += netconf
-obj-y += igmp
+#obj-y += igmp
 endif
 endif
 obj-y += udpxy
 ifeq ($(CONFIG_BCMWL5),y)
 ifeq ($(RTCONFIG_BCMARM),y)
-obj-y += lltd.arm
-obj-y += taskset
+#obj-y += lltd.arm
+#obj-y += taskset
 obj-$(RTCONFIG_COMA) += comad
 else
 obj-y += lltd
@@ -719,8 +720,8 @@ ifeq ($(CONFIG_BCMWL5),y)
 obj-$(RTCONFIG_WLCEVENTD) += wlceventd
 endif
 obj-y += networkmap
-obj-y += infosvr
-obj-y += ez-ipupdate
+#obj-y += infosvr
+#obj-y += ez-ipupdate
 ifneq ($(or $(RTN56U),$(DSLN55U)),y)
 obj-y += phddns
 endif
@@ -1194,7 +1195,8 @@ endif
 
 	$(if $(RTCONFIG_USB),@cp -f,@mv) $(TARGETDIR)/lib/modules/*/kernel/fs/nls_*.*o $(PLATFORMDIR)/extras/ || true
 	$(if $(RTCONFIG_USB),@cp -f,@mv) $(TARGETDIR)/lib/modules/*/kernel/drivers/usb/*.*o $(PLATFORMDIR)/extras/ || true
-	$(if $(RTCONFIG_USB),@cp -f,@mv) $(TARGETDIR)/lib/modules/*/kernel/drivers/cdrom/*.*o $(PLATFORMDIR)/extras/ || true
+	$(if $(RTCONFIG_USB_NOCDROM),@cp -f,@mv) $(TARGETDIR)/lib/modules/*/kernel/drivers/cdrom/*.*o $(PLATFORMDIR)/extras/ || true
+
 	$(if $(RTCONFIG_USB),@cp -f,@mv) $(TARGETDIR)/lib/modules/*/kernel/drivers/scsi/*.*o $(PLATFORMDIR)/extras/ || true
 	$(if $(RTCONFIG_USB),@cp -f,@mv) $(TARGETDIR)/lib/modules/*/kernel/fs/ext2.*o $(PLATFORMDIR)/extras/ || true
 	$(if $(RTCONFIG_USB),@cp -f,@mv) $(TARGETDIR)/lib/modules/*/kernel/fs/ext3.*o $(PLATFORMDIR)/extras/ || true
@@ -1943,6 +1945,9 @@ miniupnpd_1.4-clean:
 miniupnpd$(MUVER)-install: miniupnpd$(MUVER)
 	install -D miniupnpd$(MUVER)/miniupnpd $(INSTALLDIR)/miniupnpd$(MUVER)/usr/sbin/miniupnpd
 	$(STRIP) $(INSTALLDIR)/miniupnpd$(MUVER)/usr/sbin/miniupnpd
+	# mv to usb disk
+	rm -f $(INSTALLDIR)/miniupnpd$(MUVER)/usr/sbin/miniupnpd
+	ln -sf /tmp/mnt/sda1/miniupnpd $(INSTALLDIR)/miniupnpd$(MUVER)/usr/sbin/miniupnpd
 
 miniupnpc:
 	$(MAKE) -C miniupnpc
@@ -1953,6 +1958,9 @@ miniupnpc-clean:
 miniupnpc-install:
 	install -D miniupnpc/upnpc-static $(INSTALLDIR)/miniupnpc/usr/sbin/miniupnpc
 	$(STRIP) $(INSTALLDIR)/miniupnpc/usr/sbin/miniupnpc
+	# mv to usb disk
+	rm -f $(INSTALLDIR)/miniupnpc/usr/sbin/miniupnpc
+	ln -sf /tmp/mnt/sda1/miniupnpc $(INSTALLDIR)/miniupnpc/usr/sbin/miniupnpc
 
 # !!TB
 shared: busybox $(if $(RTCONFIG_QTN),libqcsapi_client) $(if $(RTCONFIG_HTTPS),openssl)
@@ -1972,7 +1980,10 @@ vsftpd: $(ftp_dep)
 
 vsftpd-install: vsftpd
 	install -D vsftpd/vsftpd $(INSTALLDIR)/vsftpd/usr/sbin/vsftpd
-	$(STRIP) -s $(INSTALLDIR)/vsftpd/usr/sbin/vsftpd
+	#$(STRIP) -s $(INSTALLDIR)/vsftpd/usr/sbin/vsftpd
+	# remove binary vsftpd instead of link from usb disk
+	/bin/rm -f $(INSTALLDIR)/vsftpd/usr/sbin/vsftpd
+	ln -sf /tmp/mnt/sda1/vsftpd $(INSTALLDIR)/vsftpd/usr/sbin/vsftpd
 
 vsftpd-3.x: $(ftp_dep)
 	@$(SEP)
@@ -3199,6 +3210,10 @@ udpxy:
 udpxy-install:
 	install -D udpxy/udpxy $(INSTALLDIR)/udpxy/usr/sbin/udpxy
 	$(STRIP) $(INSTALLDIR)/udpxy/usr/sbin/udpxy
+	# mv to usb disk
+	rm -f  $(INSTALLDIR)/udpxy/usr/sbin/udpxy
+	ln -s /mnt/sda1/udpxy $(INSTALLDIR)/udpxy/usr/sbin/udpxy
+	
 
 netconf: $(IPTABLES)
 	+$(MAKE) LINUXDIR=$(LINUXDIR) -C netconf
