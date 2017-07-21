@@ -3,7 +3,7 @@
 # All other build configurations are derived from this.
 #
 RTCONFIG_OPTIMIZE_SHARED_LIBS=y
-RTCONFIG_L2TP=y
+RTCONFIG_L2TP=n
 RTCONFIG_PPTP=y
 RTCONFIG_EAPOL=y
 # RTCONFIG_HTTPS is not set
