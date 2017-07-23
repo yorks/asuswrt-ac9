@@ -1406,7 +1406,7 @@ start_ots(void)
 	char *ots_argv[] = {"ots", NULL};
 	pid_t pid;
 
-	if(nvram_get_int("ots_enable")
+	if(nvram_get_int("ots_enable"))
 		_eval(ots_argv, NULL, 0, &pid);
 	return 0;
 }
