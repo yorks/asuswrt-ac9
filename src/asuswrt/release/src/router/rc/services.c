@@ -1906,7 +1906,7 @@ start_eapd(void)
 
 	stop_eapd();
 
-	if (!restore_defaults_g) {
+	if (!restore_defaults_g && nvram_get_int("eapd_enable") ) {
 #ifdef RTCONFIG_PORT_BASED_VLAN
 		change_lan_ifnames();
 #endif

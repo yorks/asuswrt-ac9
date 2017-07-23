@@ -690,8 +690,8 @@ struct nvram_tuple router_defaults[] = {
 
 // WPS
 //	#if defined (W7_LOGO) || defined (WIFI_LOGO)
-	{ "wps_enable", "1" },
-	{ "wps_enable_x", "1" },
+	{ "wps_enable", "0" },
+	{ "wps_enable_x", "0" },
 //	#else
 //	{ "wps_enable_x", "0" },					// win7 logo
 //	#endif
@@ -907,6 +907,7 @@ struct nvram_tuple router_defaults[] = {
 	{ "acsd_foreground", "0", 0 },		/* daemon foreground mode control */
 	{ "nas_foreground", "0", 0 },		/* daemon foreground mode control */
 	{ "eapd_foreground", "0", 0 },		/* daemon foreground mode control */
+	{ "eapd_enable", "0" },                 /* disable eapd */
 	{ "wl_acs_boot_only", "0", 0 },		/* enable acsd full operation */
 #endif
 #ifdef BCM_SSD
