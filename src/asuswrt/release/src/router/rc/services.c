@@ -3143,6 +3143,9 @@ void start_upnp(void)
 	upnp_enable = nvram_get_int("upnp_enable");
 	upnp_mnp_enable = nvram_get_int("upnp_mnp");
 
+	if (!upnp_enable)
+		return;
+
 	if (nvram_get_int(strcat_r(prefix, "upnp_enable", tmp))) {
 		mkdir("/etc/upnp", 0777);
 		if (f_exists("/etc/upnp/config.alt")) {
