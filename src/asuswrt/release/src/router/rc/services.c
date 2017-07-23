@@ -3028,6 +3028,24 @@ stop_httpd(void)
 #endif
 }
 
+#ifdef RTCONFIG_SHADOWVPN
+void
+start_shadowvpn_client(void)
+{
+	if(nvram_match("shadowvpn_client_enable", "1")){
+		start_shadowvpn("client");
+	}
+}
+void
+stop_shadowvpn_client(void)
+{
+	if(nvram_match("shadowvpn_client_enable", "1")){
+		stop_shadowvpn("client");
+	}
+}
+#endif
+
+
 //////////vvvvvvvvvvvvvvvvvvvvvjerry5 2009.07
 void
 stop_rstats(void)
@@ -5477,6 +5495,11 @@ start_services(void)
 #ifdef RTCONFIG_CLOUDCHECK
 	start_cloudcheck();
 #endif
+
+#ifdef RTCONFIG_SHADOWVPN
+	start_shadowvpn_client();
+#endif
+
 
 #ifdef RTCONFIG_QCA_PLC_UTILS
 	start_plchost();
@@ -8588,6 +8611,18 @@ check_ddr_done:
 		if (action & RC_SERVICE_START) start_vpnserver(atoi(&script[9]));
 	}
 #endif
+
+#ifdef RTCONFIG_SHADOWVPN
+	else if (strncmp(script, "shadowvpn_client", 16) == 0) {
+		if (action & RC_SERVICE_STOP) stop_shadowvpn("client");
+		if (action & RC_SERVICE_START) start_shadowvpn("client");
+	}
+	else if (strncmp(script, "shadowvpn_server", 16) == 0) {
+		if (action & RC_SERVICE_STOP) stop_shadowvpn("server");
+		if (action & RC_SERVICE_START) start_shadowvpn("server");
+	}
+#endif
+
 #if defined(RTCONFIG_PPTPD) || defined(RTCONFIG_ACCEL_PPTPD)
 	else if (strcmp(script, "vpnd") == 0)
 	{

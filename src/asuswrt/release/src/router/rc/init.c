@@ -5677,6 +5677,9 @@ int init_nvram(void)
 	add_rc_support("openvpnd");
 	//nvram_set("vpnc_proto", "disable");
 #endif
+#ifdef RTCONFIG_SHADOWVPN
+	add_rc_support("shadowvpn");
+#endif
 
 #ifdef RTCONFIG_USB
 #ifdef RTCONFIG_USB_PRINTER

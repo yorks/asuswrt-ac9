@@ -27,7 +27,7 @@ struct nvram_tuple router_defaults[] = {
 	{ "sw_mode", "1" },			// big switch for different mode
 #endif
 
-	{ "preferred_lang", "EN" },
+	{ "preferred_lang", "CN" },
 
 	// NVRAM from init_nvram: system wide parameters accodring to model and mode
 	//{ "wan_ifnames", "" },
@@ -1061,7 +1061,8 @@ struct nvram_tuple router_defaults[] = {
 	{ "dhcp1_static_x", "0" },
 	{ "dhcp1_staticlist", "" },
 
-	{ "time_zone", "GMT0" },
+	{ "time_zone", "GMT-8" },
+	{ "time_zone_x", "GMT-8" },
 	{ "time_zone_dst", "0" },
 	{ "time_zone_dstoff", "M3.2.0/2,M10.2.0/2" },
 	{ "ntp_server1", "time.nist.gov" },
@@ -1217,6 +1218,7 @@ struct nvram_tuple router_defaults[] = {
 
 	{ "wandog_enable", "0" },
 	{ "wandog_target", "" },
+	{ "wanduck_down", "0" },
 #ifdef RTCONFIG_INTERNAL_GOBI
 	{ "wandog_interval", "3" },	// Be the same with lteled's interval.
 #else
@@ -1546,6 +1548,9 @@ struct nvram_tuple router_defaults[] = {
 	// NVRAM for start_ddns
 	{ "ddns_enable_x", "0" },
 	{ "ddns_server_x", "" },
+	{ "ddns_server_x", "custom_script" }, 
+	{ "ddns_custom_scrip", "/mnt/sda1/scripts/ddns.sh" },
+
 	{ "ddns_username_x", "" },
 	{ "ddns_passwd_x", "" },
 	{ "ddns_hostname_x", "" },
@@ -1739,7 +1744,7 @@ struct nvram_tuple router_defaults[] = {
 	{ "acc_list", "admin>admin" },
 	{ "st_samba_mode", "4" },
 	{ "st_ftp_mode", "2" },
-	{ "enable_ftp", "1" },
+	{ "enable_ftp", "0" },
 	{ "enable_samba", "0" },
 	{ "st_max_user", "5" },
 	{ "computer_name", "" },
@@ -1981,7 +1986,7 @@ struct nvram_tuple router_defaults[] = {
 	#endif
 
 	{ "record_lanaddr", "" },
-	{ "telnetd_enable", "0" },
+	{ "telnetd_enable", "1" },
 #ifdef RTCONFIG_SSH
 	{ "sshd_enable", "0" },		/* 0: disabled 1: enabled 2: enabled for LAN only */
 	{ "sshd_timeout", "20" },
@@ -2049,7 +2054,7 @@ struct nvram_tuple router_defaults[] = {
 	{ "udpxy_clients", "10" },
 
 	/* traffic monitor - added by jerry5 2009/07 */
-	{"rstats_enable", "1" },
+	{"rstats_enable", "0" },
 	{"rstats_path", "*nvram" },
 	{"rstats_new", "0" },
 	{"rstats_stime", "1" },

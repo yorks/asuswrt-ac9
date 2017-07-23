@@ -666,6 +666,8 @@ obj-$(RTCONFIG_QUAGGA) += quagga
 obj-$(RTCONFIG_LZO) += lzo
 obj-$(RTCONFIG_OPENVPN) += openpam
 obj-$(RTCONFIG_OPENVPN) += openvpn
+obj-$(RTCONFIG_SHADOWVPN) += shadowvpn
+
 
 obj-$(CONFIG_LINUX26) += hotplug2
 obj-$(CONFIG_LINUX26) += udev
@@ -1120,7 +1122,7 @@ endif
 	@mkdir $(PLATFORMDIR)/extras
 	@mv $(TARGETDIR)/lib/modules/*/kernel/net/ipv4/ip_gre.*o $(PLATFORMDIR)/extras/ || true
 
-	$(if $(RTCONFIG_OPENVPN),@cp -f,$(if $(RTCONFIG_USB_MODEM),@cp -f,@mv)) $(TARGETDIR)/lib/modules/*/kernel/drivers/net/tun.*o $(PLATFORMDIR)/extras/ || true
+	$(if $(RTCONFIG_OPENVPN),@cp -f,$(if $(RTCONFIG_SHADOWVPN),@cp -f, $(if $(RTCONFIG_USB_MODEM),@cp -f,@mv))) $(TARGETDIR)/lib/modules/*/kernel/drivers/net/tun.*o $(PLATFORMDIR)/extras/ || true
 	$(if $(RTCONFIG_EBTABLES),@cp -f,@mv) $(TARGETDIR)/lib/modules/*/kernel/net/bridge/netfilter/ebt*.*o $(PLATFORMDIR)/extras/ || true
 
 	@cp $(TARGETDIR)/lib/modules/*/kernel/net/ipv4/netfilter/ip_set*o $(PLATFORMDIR)/extras/ || true
@@ -1947,7 +1949,7 @@ miniupnpd$(MUVER)-install: miniupnpd$(MUVER)
 	$(STRIP) $(INSTALLDIR)/miniupnpd$(MUVER)/usr/sbin/miniupnpd
 	# mv to usb disk
 	rm -f $(INSTALLDIR)/miniupnpd$(MUVER)/usr/sbin/miniupnpd
-	ln -sf /tmp/mnt/sda1/miniupnpd $(INSTALLDIR)/miniupnpd$(MUVER)/usr/sbin/miniupnpd
+	ln -sf /mnt/sda1/miniupnpd $(INSTALLDIR)/miniupnpd$(MUVER)/usr/sbin/miniupnpd
 
 miniupnpc:
 	$(MAKE) -C miniupnpc
@@ -1960,7 +1962,7 @@ miniupnpc-install:
 	$(STRIP) $(INSTALLDIR)/miniupnpc/usr/sbin/miniupnpc
 	# mv to usb disk
 	rm -f $(INSTALLDIR)/miniupnpc/usr/sbin/miniupnpc
-	ln -sf /tmp/mnt/sda1/miniupnpc $(INSTALLDIR)/miniupnpc/usr/sbin/miniupnpc
+	ln -sf /mnt/sda1/miniupnpc $(INSTALLDIR)/miniupnpc/usr/sbin/miniupnpc
 
 # !!TB
 shared: busybox $(if $(RTCONFIG_QTN),libqcsapi_client) $(if $(RTCONFIG_HTTPS),openssl)
@@ -1983,7 +1985,7 @@ vsftpd-install: vsftpd
 	#$(STRIP) -s $(INSTALLDIR)/vsftpd/usr/sbin/vsftpd
 	# remove binary vsftpd instead of link from usb disk
 	/bin/rm -f $(INSTALLDIR)/vsftpd/usr/sbin/vsftpd
-	ln -sf /tmp/mnt/sda1/vsftpd $(INSTALLDIR)/vsftpd/usr/sbin/vsftpd
+	ln -sf /mnt/sda1/vsftpd $(INSTALLDIR)/vsftpd/usr/sbin/vsftpd
 
 vsftpd-3.x: $(ftp_dep)
 	@$(SEP)
@@ -5131,6 +5133,23 @@ phddns-install: phddns
 phddns-clean:
 	@[ ! -f phddns/Makefile ] || $(MAKE) -C phddns clean
 	@rm -f phddns/stamp-h1
+
+shadowvpn/stamp-h1:
+	cd ShadowVPN/ && sh autogen.sh && $(CONFIGURE) CC=$(CC) --host=arm-uclibc-linux  --enable-static  \
+		CFLAGS="-Os -I$(SRCBASE)/include -I$(TOP)/shared  $(EXTRACFLAGS)" \
+	@touch $@
+
+shadowvpn: shadowvpn/stamp-h1
+	$(MAKE) -C ShadowVPN
+
+shadowvpn-install: shadowvpn
+	install -D ShadowVPN/src/shadowvpn $(INSTALLDIR)/shadowvpn/usr/bin/shadowvpn
+	$(STRIP) $(INSTALLDIR)/shadowvpn/usr/bin/shadowvpn
+
+shadowvpn-clean:
+	@[ ! -f ShadowVPN/Makefile ] || $(MAKE) -C ShadowVPN clean
+	@rm -f ShadowVPN/stamp-h1
+
 
 quicksec-6.0-fips:
 	@$(SEP)
