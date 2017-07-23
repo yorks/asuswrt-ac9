@@ -1,0 +1,12 @@
+[Unit]
+Description=Shadowvpn Service
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/shadowvpn -c /etc/shadowvpn/%i.conf -s start
+ExecStop=/usr/bin/shadowvpn -c /etc/shadowvpn/%i.conf -s stop
+
+[Install]
+WantedBy=multi-user.target

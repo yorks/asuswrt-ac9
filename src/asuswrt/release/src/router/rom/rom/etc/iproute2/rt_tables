@@ -1,0 +1,13 @@
+#
+# reserved values
+#
+255     local
+254     main
+253     default
+0       unspec
+#
+# local
+#
+100    wan0
+101    wan1
+200    vpn
