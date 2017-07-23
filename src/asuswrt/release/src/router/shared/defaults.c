@@ -907,8 +907,8 @@ struct nvram_tuple router_defaults[] = {
 	{ "acsd_foreground", "0", 0 },		/* daemon foreground mode control */
 	{ "nas_foreground", "0", 0 },		/* daemon foreground mode control */
 	{ "eapd_foreground", "0", 0 },		/* daemon foreground mode control */
-	{ "eapd_enable", "0" },                 /* disable eapd */
-	{ "ots_enable", "0" },                  /* disable eapd */
+	{ "eapd_enable", "1" },                 /* turn on eapd, wifi auth needed?? */
+	{ "ots_enable", "0" },                  /* disable ots */
 	{ "wl_acs_boot_only", "0", 0 },		/* enable acsd full operation */
 #endif
 #ifdef BCM_SSD
