@@ -1871,8 +1871,8 @@ static void write_access_restriction(FILE *fp)
 			snprintf(webports, sizeof(webports), "%d", http_port != 0 ? http_port : https_port);
 
 #ifdef RTCONFIG_SSH
-		if (nvram_get_int("sshd_enable") != 0)
-			snprintf(sshport, sizeof(sshport), ",%d", nvram_get_int("sshd_port") ? : 22);
+		if (nvram_get_int("sshd_enable") == 2) /* 0: disabled 1: enabled 2: enabled for LAN only */
+			snprintf(sshport, sizeof(sshport), ",%d", nvram_get_int("sshd_port") ? : 22); 
 		else
 #endif
 			strcpy(sshport, "");
@@ -1898,7 +1898,7 @@ static void write_access_restriction(FILE *fp)
 					fprintf(fp, "-A ACCESS_RESTRICTION -s %s -p tcp -m multiport --dport %s -j ACCEPT\n", srcip, webports);
 				}
 #ifdef RTCONFIG_SSH
-			if ((atoi(accessType) & ACCESS_SSH) && nvram_get_int("sshd_enable") != 0 ) {
+			if ((atoi(accessType) & ACCESS_SSH) && nvram_get_int("sshd_enable") == 2 ) {
 #ifdef RTCONFIG_PROTECTION_SERVER
 				fprintf(fp, "-A ACCESS_RESTRICTION -s %s -p tcp --dport %d -j RETURN\n", srcip, nvram_get_int("sshd_port") ? : 22);
 #else
@@ -1994,7 +1994,7 @@ start_default_filter(int lanunit)
 #ifdef RTCONFIG_PROTECTION_SERVER
 	if (nvram_get_int("telnetd_enable") != 0
 #ifdef RTCONFIG_SSH
-	    || nvram_get_int("sshd_enable") != 0
+	    || nvram_get_int("sshd_enable") == 2
 #endif
 	) {
 		fprintf(fp, "-A INPUT ! -i %s -j %sWAN\n", lan_if, PROTECT_SRV_RULE_CHAIN);
@@ -2260,7 +2260,7 @@ TRACE_PT("writing Parental Control\n");
 #ifdef RTCONFIG_PROTECTION_SERVER
 		if (nvram_get_int("telnetd_enable") != 0
 #ifdef RTCONFIG_SSH
-    		    || nvram_get_int("sshd_enable") != 0
+    		    || nvram_get_int("sshd_enable") == 2
 #endif
    		) {
 			fprintf(fp, "-A INPUT ! -i %s -j %sWAN\n", lan_if, PROTECT_SRV_RULE_CHAIN);
@@ -3123,7 +3123,7 @@ TRACE_PT("writing Parental Control\n");
 #ifdef RTCONFIG_PROTECTION_SERVER
 		if (nvram_get_int("telnetd_enable") != 0
 #ifdef RTCONFIG_SSH
-    		    || nvram_get_int("sshd_enable") != 0
+    		    || nvram_get_int("sshd_enable") == 2
 #endif
    		) {
 			fprintf(fp, "-A INPUT ! -i %s -j %sWAN\n", lan_if, PROTECT_SRV_RULE_CHAIN);
